@@ -2,7 +2,7 @@
 import cv2
 import numpy as np
 import time
-import torch
+# import torch
 
 NUM_DIGITS = 8
 PIXEL_SAMPLE_SIZE = 3  # Square calculation , must be odd number.
