@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5d9143ff-fb5f-4407-b01b-8dd2dc95d3b3" name="默认更改列表" comment="img_process: complete basics image process function">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -121,7 +122,7 @@
       <workItem from="1582016210198" duration="11923000" />
       <workItem from="1582114170450" duration="1618000" />
       <workItem from="1582159003758" duration="742000" />
-      <workItem from="1582159785592" duration="1559000" />
+      <workItem from="1582159785592" duration="20167000" />
     </task>
     <task id="LOCAL-00001" summary="img_process">
       <created>1572395702426</created>
@@ -227,6 +228,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="img_process: complete basics image process function" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/img_process$main.coverage" NAME="main Coverage Results" MODIFIED="1582161644833" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/img_process$main.coverage" NAME="main Coverage Results" MODIFIED="1582192017448" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

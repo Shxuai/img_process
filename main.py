@@ -2,6 +2,8 @@
 import cv2
 import numpy as np
 import time
+import sys
+
 # import torch
 
 NUM_DIGITS = 8
@@ -63,14 +65,16 @@ def pixel_sample_2_binary(image_object, pixel_sample_location=0):
     if pixel_sample_size < 1:  # If variable less than zero, assignment to zero.
         pixel_sample_size = 1
 
-    # image_object = rgb_2_binary(image_object)  # Convert the image data to binary.
+    image_object = rgb_2_binary(image_object)  # Convert the image data to binary.
 
-    image_object
+    # np.append(image_object[:, 1:], [[[1]]], axis=1)
 
-
-
-
-
+    image_object.flatten()
+    image_object.resize(image_object.shape[0], image_object.shape[1], image_object.shape[2] * image_object.shape[3])
+    image_object = np.insert(image_object, image_object.shape[2], values=np.ones(image_object.shape[1]), axis=2)
+    #
+    # print(image_object[0][0])
+    print(sys.getsizeof(image_object))
     return image_object.shape
 
 
@@ -82,7 +86,8 @@ img = cv2.imread('th.jpg')
 
 print(pixel_sample_2_binary(img))
 
-
-
-
-
+# a = np.zeros([1080, 1920, 24])
+# print(a[0][0])
+# print('\n------------------------------\n')
+# a = np.insert(a, 3, values=np.ones(a.shape[1]), axis=2)
+# print(a[0][0])
