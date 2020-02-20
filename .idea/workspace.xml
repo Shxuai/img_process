@@ -82,7 +82,7 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="F:\img_process\venv\Scripts\python.exe" />
+      <option name="SDK_HOME" value="C:\Users\76980\AppData\Local\Programs\Python\Python37\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -121,7 +121,7 @@
       <workItem from="1582016210198" duration="11923000" />
       <workItem from="1582114170450" duration="1618000" />
       <workItem from="1582159003758" duration="742000" />
-      <workItem from="1582159785592" duration="1140000" />
+      <workItem from="1582159785592" duration="1559000" />
     </task>
     <task id="LOCAL-00001" summary="img_process">
       <created>1572395702426</created>
@@ -227,6 +227,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="img_process: complete basics image process function" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/img_process$main.coverage" NAME="main Coverage Results" MODIFIED="1582116192929" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/img_process$main.coverage" NAME="main Coverage Results" MODIFIED="1582161644833" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
