@@ -82,8 +82,20 @@ def pixel_sample_2_binary(image_object, pixel_sample_location=3):
     return image_object
 
 
-def pixel_sample_chunk(image_object, pixel_sample_location=3):
+def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
+    # pixel_sample_size = PIXEL_SAMPLE_SIZE
+    if pixel_location is None:
+        pixel_location = [0, 0]
+    image_height = image_object.shape[0]
+    image_width = image_object.shape[1]
 
+    if chunk_size % 2 != 0:  # Convert even to odd.
+        chunk_size -= 1
+        print('Adjust chunk_size to ', chunk_size)
+
+    if chunk_size < 3:  # If variable less than three, assignment to three.
+        chunk_size = 3
+        print('Adjust chunk_size to ', chunk_size)
 
 img = cv2.imread('th.jpg')
 # cv2.imshow('src', fuzzy_process(img, 4))
