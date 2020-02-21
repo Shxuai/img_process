@@ -1,7 +1,10 @@
 # --coding:utf-8--
+import string
+
 import cv2
 import numpy as np
 import time
+import threading
 import sys
 import torch
 
@@ -25,16 +28,19 @@ def rgb_2_binary(cv2_img_object):
     print('rgb_2_binary encoding start')
     result = np.zeros((cv2_img_object.shape[0], cv2_img_object.shape[1], cv2_img_object.shape[2], NUM_DIGITS),
                       dtype="uint8")
-    # for y in range(0, cv2_img_object.shape[0]):
-    #     for x in range(0, cv2_img_object.shape[1]):
-    #         for z in range(0, cv2_img_object.shape[2]):
-    #             result[y][x][z] = binary_encode(cv2_img_object[y][x][z], NUM_DIGITS)
-    cv2_img_object = cv2_img_object[:, :, :, np.newaxis]
-    print(cv2_img_object[0][0][0])
-    exit(0)
-    for x in np.nditer(cv2_img_object, op_flags=['readwrite']):
-        x[...] = binary_encode(x, NUM_DIGITS)
-    return cv2_img_object
+    for y in range(0, cv2_img_object.shape[0]):
+        for x in range(0, cv2_img_object.shape[1]):
+            for z in range(0, cv2_img_object.shape[2]):
+                result[y][x][z] = binary_encode(cv2_img_object[y][x][z], NUM_DIGITS)
+                # result[y][x][z] = bin(result[y][x][z])
+
+    # TODO rgb_2_binary use too much time to process(about 2 min), To be optimized.
+    # cv2_img_object = cv2_img_object[:, :, :, np.newaxis]
+    # print(cv2_img_object[0][0][0])
+    # exit(0)
+    # for x in np.nditer(cv2_img_object, op_flags=['readwrite']):
+    #     x[...] = binary_encode(x, NUM_DIGITS)
+    # return cv2_img_object
 
     print('rgb_2_binary encoding completed, use time:', start_time - time.time(), 's')
     return result
@@ -62,18 +68,10 @@ def fuzzy_process(image_object, scale_num, interpolation_function=cv2.INTER_CUBI
         (0, 0), fx=scale_num, fy=scale_num, interpolation=interpolation_function)
 
 
-def pixel_sample_2_binary(image_object, pixel_sample_location=0):
-    pixel_sample_size = PIXEL_SAMPLE_SIZE
+def pixel_sample_2_binary(image_object, pixel_sample_location=3):
 
-    if pixel_sample_size % 2 != 0:  # Convert even to odd.
-        pixel_sample_size -= 1
-
-    if pixel_sample_size < 1:  # If variable less than zero, assignment to zero.
-        pixel_sample_size = 1
 
     image_object = rgb_2_binary(image_object)  # Convert the image data to binary.
-    print(image_object.shape)
-    exit(0)
 
     image_object.flatten()
     image_object.resize(image_object.shape[0], image_object.shape[1], image_object.shape[2] * image_object.shape[3])
@@ -81,8 +79,23 @@ def pixel_sample_2_binary(image_object, pixel_sample_location=0):
     #
     # print
     # print(sys.getsizeof(image_object))
-    return image_object.shape
+    return image_object
 
+
+def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
+    # pixel_sample_size = PIXEL_SAMPLE_SIZE
+    if pixel_location is None:
+        pixel_location = [0, 0]
+    image_height = image_object.shape[0]
+    image_width = image_object.shape[1]
+
+    if chunk_size % 2 != 0:  # Convert even to odd.
+        chunk_size -= 1
+        print('Adjust chunk_size to ', chunk_size)
+
+    if chunk_size < 3:  # If variable less than three, assignment to three.
+        chunk_size = 3
+        print('Adjust chunk_size to ', chunk_size)
 
 img = cv2.imread('th.jpg')
 # cv2.imshow('src', fuzzy_process(img, 4))
@@ -91,8 +104,3 @@ img = cv2.imread('th.jpg')
 
 print(pixel_sample_2_binary(img))
 
-# a = np.zeros([1080, 1920, 24])
-# print(a[0][0])
-# print('\n------------------------------\n')
-# a = np.insert(a, 3, values=np.ones(a.shape[1]), axis=2)
-# print(a[0][0])
