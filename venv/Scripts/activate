@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\Shxuai\Documents\GitHub\Shxuai_git\Python\img_process\venv"
+VIRTUAL_ENV="F:\img_process\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

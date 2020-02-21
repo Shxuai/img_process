@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set "VIRTUAL_ENV=C:\Users\Shxuai\Documents\GitHub\Shxuai_git\Python\img_process\venv"
+set "VIRTUAL_ENV=F:\img_process\venv"
 
 if not defined PROMPT (
     set "PROMPT=$P$G"

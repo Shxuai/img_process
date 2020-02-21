@@ -3,8 +3,7 @@ import cv2
 import numpy as np
 import time
 import sys
-
-# import torch
+import torch
 
 NUM_DIGITS = 8
 PIXEL_SAMPLE_SIZE = 3  # Square calculation , must be odd number.
@@ -26,10 +25,17 @@ def rgb_2_binary(cv2_img_object):
     print('rgb_2_binary encoding start')
     result = np.zeros((cv2_img_object.shape[0], cv2_img_object.shape[1], cv2_img_object.shape[2], NUM_DIGITS),
                       dtype="uint8")
-    for y in range(0, cv2_img_object.shape[0]):
-        for x in range(0, cv2_img_object.shape[1]):
-            for z in range(0, cv2_img_object.shape[2]):
-                result[y][x][z] = binary_encode(cv2_img_object[y][x][z], NUM_DIGITS)
+    # for y in range(0, cv2_img_object.shape[0]):
+    #     for x in range(0, cv2_img_object.shape[1]):
+    #         for z in range(0, cv2_img_object.shape[2]):
+    #             result[y][x][z] = binary_encode(cv2_img_object[y][x][z], NUM_DIGITS)
+    cv2_img_object = cv2_img_object[:, :, :, np.newaxis]
+    print(cv2_img_object[0][0][0])
+    exit(0)
+    for x in np.nditer(cv2_img_object, op_flags=['readwrite']):
+        x[...] = binary_encode(x, NUM_DIGITS)
+    return cv2_img_object
+
     print('rgb_2_binary encoding completed, use time:', start_time - time.time(), 's')
     return result
 
@@ -66,17 +72,16 @@ def pixel_sample_2_binary(image_object, pixel_sample_location=0):
         pixel_sample_size = 1
 
     image_object = rgb_2_binary(image_object)  # Convert the image data to binary.
-
-    # np.append(image_object[:, 1:], [[[1]]], axis=1)
+    print(image_object.shape)
+    exit(0)
 
     image_object.flatten()
     image_object.resize(image_object.shape[0], image_object.shape[1], image_object.shape[2] * image_object.shape[3])
     image_object = np.insert(image_object, image_object.shape[2], values=np.ones(image_object.shape[1]), axis=2)
     #
-    # print(image_object[0][0])
-    print(sys.getsizeof(image_object))
+    # print
+    # print(sys.getsizeof(image_object))
     return image_object.shape
-
 
 
 img = cv2.imread('th.jpg')
