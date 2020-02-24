@@ -92,7 +92,9 @@ def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
         chunk_size = 3
         print('Adjust chunk_size to ', chunk_size)
 
-    result = np.zeros((PIXEL_SAMPLE_SIZE, PIXEL_SAMPLE_SIZE, 25), dtype='uint8')
+    result = np.zeros((chunk_size, chunk_size, 25), dtype='uint8')
+
+    print(result.shape, image_object.shape)
 
     for y in range(chunk_size):
         for x in range(chunk_size):
@@ -122,10 +124,10 @@ def chunk_2_img(chunk):
 
 img = cv2.imread('th.jpg')
 
-cv2.imshow('src', chunk_2_img(pixel_sample_chunk(pixel_sample_2_binary(fuzzy_process(img, 4)), 500, [0, 0])))
+# cv2.imshow('src', chunk_2_img(pixel_sample_chunk(pixel_sample_2_binary(fuzzy_process(img, 4)), 500, [0, 0])))
 
 # cv2.imshow('src', fuzzy_process(img, 4))
 # cv2.imwrite('fuzzy_th.jpg', fuzzy_process(img, 4))
-cv2.waitKey()
+# cv2.waitKey()
 
 # print(pixel_sample_2_binary(img))
