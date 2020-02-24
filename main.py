@@ -68,9 +68,7 @@ def fuzzy_process(image_object, scale_num, interpolation_function=cv2.INTER_CUBI
         (0, 0), fx=scale_num, fy=scale_num, interpolation=interpolation_function)
 
 
-def pixel_sample_2_binary(image_object, pixel_sample_location=3):
-
-
+def pixel_sample_2_binary(image_object):
     image_object = rgb_2_binary(image_object)  # Convert the image data to binary.
 
     image_object.flatten()
@@ -83,11 +81,8 @@ def pixel_sample_2_binary(image_object, pixel_sample_location=3):
 
 
 def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
-    # pixel_sample_size = PIXEL_SAMPLE_SIZE
     if pixel_location is None:
         pixel_location = [0, 0]
-    image_height = image_object.shape[0]
-    image_width = image_object.shape[1]
 
     if chunk_size % 2 != 0:  # Convert even to odd.
         chunk_size -= 1
@@ -97,10 +92,40 @@ def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
         chunk_size = 3
         print('Adjust chunk_size to ', chunk_size)
 
+    result = np.zeros((PIXEL_SAMPLE_SIZE, PIXEL_SAMPLE_SIZE, 25), dtype='uint8')
+
+    for y in range(chunk_size):
+        for x in range(chunk_size):
+            result[y][x] = image_object[y + pixel_location[1]][x + pixel_location[0]]
+
+    return result
+
+
+def chunk_2_img(chunk):
+    chunk_size = [chunk.shape[0], chunk.shape[1]]
+
+    for y in range(chunk.shape[0]):
+        for x in range(chunk.shape[1]):
+            chunk[y][x] = chunk[y][x][:-1]
+
+    chunk.flatten()
+
+    chunk.resize(chunk_size[0], chunk_size[1], 3, 8)
+
+    for y in range(chunk[0]):
+        for x in range(chunk[1]):
+            for z in range(chunk[2]):
+                chunk[y][x][z] = binary_decode(chunk[y][x][z])
+
+    return chunk
+
+
 img = cv2.imread('th.jpg')
+
+cv2.imshow('src', chunk_2_img(pixel_sample_chunk(pixel_sample_2_binary(fuzzy_process(img, 4)), 500, [0, 0])))
+
 # cv2.imshow('src', fuzzy_process(img, 4))
 # cv2.imwrite('fuzzy_th.jpg', fuzzy_process(img, 4))
-# cv2.waitKey()
+cv2.waitKey()
 
-print(pixel_sample_2_binary(img))
-
+# print(pixel_sample_2_binary(img))
