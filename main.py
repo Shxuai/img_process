@@ -96,6 +96,17 @@ def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
 
     print(result.shape, image_object.shape)
 
+    adjust_y = 0
+    adjust_x = 0
+    if (chunk_size - 1) / 2 + pixel_location[0] > image_object[0]:
+        adjust_y = image_object[0]
+    if (chunk_size - 1) / 2 + pixel_location[1] > image_object[1]:
+        adjust_x = image_object[1]
+
+    start_y = (chunk_size - 1) / 2 - pixel_location[0]
+    start_x = (chunk_size - 1) / 2 - pixel_location[1]
+
+
     for y in range(chunk_size):
         for x in range(chunk_size):
             result[y][x] = image_object[y + pixel_location[1]][x + pixel_location[0]]
@@ -123,6 +134,8 @@ def chunk_2_img(chunk):
 
 
 img = cv2.imread('th.jpg')
+
+
 
 # cv2.imshow('src', chunk_2_img(pixel_sample_chunk(pixel_sample_2_binary(fuzzy_process(img, 4)), 500, [0, 0])))
 
