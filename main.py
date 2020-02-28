@@ -81,6 +81,7 @@ def pixel_sample_2_binary(image_object):
 
 
 def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
+    print("Function pixel_sample_chunk start")
     if pixel_location is None:
         pixel_location = [0, 0]
 
@@ -95,22 +96,28 @@ def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
     result = np.zeros((chunk_size, chunk_size, 25), dtype='uint8')
 
     print(result.shape, image_object.shape)
-
-    adjust_y = 0
-    adjust_x = 0
-    if (chunk_size - 1) / 2 + pixel_location[0] > image_object[0]:
-        adjust_y = image_object[0]
-    if (chunk_size - 1) / 2 + pixel_location[1] > image_object[1]:
-        adjust_x = image_object[1]
+    exit()
 
     start_y = (chunk_size - 1) / 2 - pixel_location[0]
     start_x = (chunk_size - 1) / 2 - pixel_location[1]
 
+    if start_y < 0:
+        start_y = 0
+    if start_x < 0:
+        start_x = 0
 
-    for y in range(chunk_size):
-        for x in range(chunk_size):
-            result[y][x] = image_object[y + pixel_location[1]][x + pixel_location[0]]
+    end_y = (chunk_size - 1) / 2 + (image_object.shape[0] - pixel_location[0])
+    end_x = (chunk_size - 1) / 2 + (image_object.shape[1] - pixel_location[1])
 
+    if end_y > image_object.shape[0]:
+        end_y = image_object.shape[0]
+    if end_x > image_object.shape[1]:
+        end_x = image_object.shape[1]
+
+    for start_y in range(end_y):
+        for start_x in range(end_x):
+            result[start_y][start_x] = image_object[pixel_location[0] - (chunk_size - 1) / 2 + start_y][pixel_location[1] - (chunk_size - 1) / 2 + start_x]
+    print("Function pixel_sample_chunk end")
     return result
 
 
@@ -135,9 +142,7 @@ def chunk_2_img(chunk):
 
 img = cv2.imread('th.jpg')
 
-
-
-# cv2.imshow('src', chunk_2_img(pixel_sample_chunk(pixel_sample_2_binary(fuzzy_process(img, 4)), 500, [0, 0])))
+cv2.imshow('src', chunk_2_img(pixel_sample_chunk(pixel_sample_2_binary(fuzzy_process(img, 4)), 500, [0, 0])))
 
 # cv2.imshow('src', fuzzy_process(img, 4))
 # cv2.imwrite('fuzzy_th.jpg', fuzzy_process(img, 4))
