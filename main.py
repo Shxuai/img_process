@@ -85,7 +85,7 @@ def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
     if pixel_location is None:
         pixel_location = [0, 0]
 
-    if chunk_size % 2 != 0:  # Convert even to odd.
+    if chunk_size % 2 == 0:  # Convert even to odd.
         chunk_size -= 1
         print('Adjust chunk_size to ', chunk_size)
 
@@ -95,11 +95,11 @@ def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
 
     result = np.zeros((chunk_size, chunk_size, 25), dtype='uint8')
 
-    print(result.shape, image_object.shape)
-    exit()
+    # print(result.shape, image_object.shape)
+    # exit()
 
-    start_y = (chunk_size - 1) / 2 - pixel_location[0]
-    start_x = (chunk_size - 1) / 2 - pixel_location[1]
+    start_y = int((chunk_size - 1) / 2 - pixel_location[0])
+    start_x = int((chunk_size - 1) / 2 - pixel_location[1])
 
     if start_y < 0:
         start_y = 0
@@ -116,7 +116,12 @@ def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
 
     for start_y in range(end_y):
         for start_x in range(end_x):
-            result[start_y][start_x] = image_object[pixel_location[0] - (chunk_size - 1) / 2 + start_y][pixel_location[1] - (chunk_size - 1) / 2 + start_x]
+            # result[start_y][start_x]\
+            #     = image_object[int(pixel_location[0] - (chunk_size - 1) / 2 + start_y)][
+            #     int(pixel_location[1] - (chunk_size - 1) / 2 + start_x)]
+            result[start_y][start_x]\
+                = image_object[int(pixel_location[0] - (chunk_size - 1) / 2 + start_y)][
+                int(pixel_location[1] - (chunk_size - 1) / 2 + start_x)]
     print("Function pixel_sample_chunk end")
     return result
 
