@@ -85,7 +85,7 @@ def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
     if pixel_location is None:
         pixel_location = [0, 0]
 
-    if chunk_size % 2 == 0:  # Convert even to odd.
+    if chunk_size % 2 == 1:  # Convert even to odd.
         chunk_size -= 1
         print('Adjust chunk_size to ', chunk_size)
 
@@ -94,9 +94,6 @@ def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
         print('Adjust chunk_size to ', chunk_size)
 
     result = np.zeros((chunk_size, chunk_size, 25), dtype='uint8')
-
-    # print(result.shape, image_object.shape)
-    # exit()
 
     start_y = int((chunk_size - 1) / 2 - pixel_location[0])
     start_x = int((chunk_size - 1) / 2 - pixel_location[1])
@@ -109,48 +106,54 @@ def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
     end_y = (chunk_size - 1) / 2 + (image_object.shape[0] - pixel_location[0])
     end_x = (chunk_size - 1) / 2 + (image_object.shape[1] - pixel_location[1])
 
-    if end_y > image_object.shape[0]:
-        end_y = image_object.shape[0]
-    if end_x > image_object.shape[1]:
-        end_x = image_object.shape[1]
+    if end_y > result.shape[0]:
+        end_y = result.shape[0]
+    if end_x > result.shape[1]:
+        end_x = result.shape[1]
 
-    for start_y in range(end_y):
-        for start_x in range(end_x):
-            # result[start_y][start_x]\
-            #     = image_object[int(pixel_location[0] - (chunk_size - 1) / 2 + start_y)][
-            #     int(pixel_location[1] - (chunk_size - 1) / 2 + start_x)]
-            result[start_y][start_x]\
-                = image_object[int(pixel_location[0] - (chunk_size - 1) / 2 + start_y)][
+    for start_y in range(start_y, end_y):
+        start_x = int((chunk_size - 1) / 2 - pixel_location[1])
+        if start_x < 0:
+            start_x = 0
+        for start_x in range(start_x, end_x):
+            result[start_y][start_x] = image_object[int(pixel_location[0] - (chunk_size - 1) / 2 + start_y)][
                 int(pixel_location[1] - (chunk_size - 1) / 2 + start_x)]
+
     print("Function pixel_sample_chunk end")
     return result
 
 
 def chunk_2_img(chunk):
     chunk_size = [chunk.shape[0], chunk.shape[1]]
+    chunk_process = np.zeros((chunk.shape[0], chunk.shape[1], chunk.shape[2] - 1), dtype='uint8')
+    chunk_result = np.zeros((chunk.shape[0], chunk.shape[1], 3), dtype='uint8')
 
     for y in range(chunk.shape[0]):
         for x in range(chunk.shape[1]):
-            chunk[y][x] = chunk[y][x][:-1]
+            chunk_process[y][x] = chunk[y][x][:-1]
 
-    chunk.flatten()
+    chunk_process.flatten()
 
-    chunk.resize(chunk_size[0], chunk_size[1], 3, 8)
+    chunk_process.resize(chunk_size[0], chunk_size[1], 3, 8)
 
-    for y in range(chunk[0]):
-        for x in range(chunk[1]):
-            for z in range(chunk[2]):
-                chunk[y][x][z] = binary_decode(chunk[y][x][z])
+    for y in range(chunk_process.shape[0]):
+        for x in range(chunk_process.shape[1]):
+            for z in range(chunk_process.shape[2]):
+                chunk_result[y][x][z] = binary_decode(chunk_process[y][x][z])
 
-    return chunk
+    chunk_result.resize(chunk_size[0], chunk_size[1], 3)
+    return chunk_result
 
 
 img = cv2.imread('th.jpg')
 
-cv2.imshow('src', chunk_2_img(pixel_sample_chunk(pixel_sample_2_binary(fuzzy_process(img, 4)), 500, [0, 0])))
+test_img = chunk_2_img(pixel_sample_chunk(pixel_sample_2_binary(fuzzy_process(img, 4)), 500, [0, 0]))
+
+cv2.imshow('src', img)
+cv2.imshow('src', test_img)
 
 # cv2.imshow('src', fuzzy_process(img, 4))
 # cv2.imwrite('fuzzy_th.jpg', fuzzy_process(img, 4))
-# cv2.waitKey()
+cv2.waitKey()
 
 # print(pixel_sample_2_binary(img))
