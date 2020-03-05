@@ -85,7 +85,7 @@ def pixel_sample_2_binary(image_object):
 
 
 def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
-    print("Function pixel_sample_chunk start")
+    # print("Function pixel_sample_chunk start")
     if pixel_location is None:
         pixel_location = [0, 0]
 
@@ -107,8 +107,8 @@ def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
     if start_x < 0:
         start_x = 0
 
-    end_y = (chunk_size - 1) / 2 + (image_object.shape[0] - pixel_location[0])
-    end_x = (chunk_size - 1) / 2 + (image_object.shape[1] - pixel_location[1])
+    end_y = int((chunk_size - 1) / 2 + (image_object.shape[0] - pixel_location[0]))
+    end_x = int((chunk_size - 1) / 2 + (image_object.shape[1] - pixel_location[1]))
 
     if end_y > result.shape[0]:
         end_y = result.shape[0]
@@ -123,7 +123,7 @@ def pixel_sample_chunk(image_object, chunk_size=3, pixel_location=None):
             result[start_y][start_x] = image_object[int(pixel_location[0] - (chunk_size - 1) / 2 + start_y)][
                 int(pixel_location[1] - (chunk_size - 1) / 2 + start_x)]
 
-    print("Function pixel_sample_chunk end")
+    # print("Function pixel_sample_chunk end")
     return result
 
 
@@ -175,18 +175,19 @@ if __name__ == '__main__':
         img = cv2.imread(img_path_list[t])
         img_bin = pixel_sample_2_binary(fuzzy_process(img, FUZZY_RATE))
         for y in range(img_bin.shape[0]):
+            print("pixel_sample_chunk complete:" + str(round(y / img_bin.shape[0] * 100, 2)) + "%")
             for x in range(img_bin.shape[1]):
                 chunk = pixel_sample_chunk(img_bin, CHUNK_SIZE, [y, x])
                 pixel = np.array(img[y][x]).astype(np.uint8)
                 chunk.tofile(img_path_list[t] + ".dir/[" + str(y) + "," + str(x) + "].chunk")
                 pixel.tofile(img_path_list[t] + ".dir/[" + str(y) + "," + str(x) + "].pixel")
 
-    test_img = chunk_2_img(pixel_sample_chunk(img_bin, CHUNK_SIZE, [0, 0]))
-
-    cv2.imshow('src', test_img)
+    # test_img = chunk_2_img(pixel_sample_chunk(img_bin, CHUNK_SIZE, [0, 0]))
+    #
+    # cv2.imshow('src', test_img)
 
     # cv2.imshow('src', fuzzy_process(img, 4))
     # cv2.imwrite('fuzzy_th.jpg', fuzzy_process(img, 4))
-    cv2.waitKey()
+    # cv2.waitKey()
 
     # print(pixel_sample_2_binary(img))
