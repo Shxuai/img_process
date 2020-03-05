@@ -11,6 +11,8 @@ import torch
 
 NUM_DIGITS = 8
 PIXEL_SAMPLE_SIZE = 3  # Square calculation , must be odd number.
+FUZZY_RATE = 4
+CHUNK_SIZE = 500
 
 
 def binary_encode(i, num_digits):
@@ -30,6 +32,7 @@ def rgb_2_binary(cv2_img_object):
     result = np.zeros((cv2_img_object.shape[0], cv2_img_object.shape[1], cv2_img_object.shape[2], NUM_DIGITS),
                       dtype=np.uint8)
     for y in range(0, cv2_img_object.shape[0]):
+        print("rgb_2_binary encoding complete: " + str(round(y / cv2_img_object.shape[0] * 100, 2)) + "%")
         for x in range(0, cv2_img_object.shape[1]):
             for z in range(0, cv2_img_object.shape[2]):
                 result[y][x][z] = binary_encode(cv2_img_object[y][x][z], NUM_DIGITS)
@@ -146,23 +149,46 @@ def chunk_2_img(chunk):
     return chunk_result
 
 
-# img = cv2.imread('th.jpg')
-# img_bin = pixel_sample_2_binary(fuzzy_process(img, 4))
-# img_bin.tofile("th.bin")
+def listdir(path, list_name):
+    for file in os.listdir(path):
+        file_path = os.path.join(path, file)
+        if os.path.isdir(file_path):
+            listdir(file_path, list_name)
+        elif os.path.splitext(file_path)[1] == '.jpg':
+            list_name.append(file_path)
+        elif os.path.splitext(file_path)[1] == '.JPG':
+            list_name.append(file_path)
+        elif os.path.splitext(file_path)[1] == '.png':
+            list_name.append(file_path)
+        elif os.path.splitext(file_path)[1] == '.PNG':
+            list_name.append(file_path)
 
 
-print(os.listdir("./"))
-exit()
+if __name__ == '__main__':
 
+    img_path_list = []
+    listdir("./resource/img_data/", img_path_list)
 
-img_bin = np.fromfile("th.bin", dtype=np.uint8)
-img_bin.resize(1080, 1920, 25)
-test_img = chunk_2_img(pixel_sample_chunk(img_bin, 500, [0, 0]))
+    for t in range(len(img_path_list)):
+        if not os.path.exists(img_path_list[t] + ".dir/"):
+            os.mkdir(img_path_list[t] + ".dir/")
+        img = cv2.imread(img_path_list[t])
+        img_bin = pixel_sample_2_binary(fuzzy_process(img, FUZZY_RATE))
+        for y in range(img_bin.shape[0]):
+            for x in range(img_bin.shape[1]):
+                chunk = pixel_sample_chunk(img_bin, CHUNK_SIZE, [y, x])
+                pixel = np.array(img[y][x]).astype(np.uint8)
+                chunk.tofile(img_path_list[t] + ".dir/[" + str(y) + "," + str(x) + "].chunk")
+                pixel.tofile(img_path_list[t] + ".dir/[" + str(y) + "," + str(x) + "].pixel")
+                cv2.imshow('src', chunk_2_img(chunk))
+                cv2.waitKey()
 
-cv2.imshow('src', test_img)
+    test_img = chunk_2_img(pixel_sample_chunk(img_bin, CHUNK_SIZE, [0, 0]))
 
-# cv2.imshow('src', fuzzy_process(img, 4))
-# cv2.imwrite('fuzzy_th.jpg', fuzzy_process(img, 4))
-cv2.waitKey()
+    cv2.imshow('src', test_img)
 
-# print(pixel_sample_2_binary(img))
+    # cv2.imshow('src', fuzzy_process(img, 4))
+    # cv2.imwrite('fuzzy_th.jpg', fuzzy_process(img, 4))
+    cv2.waitKey()
+
+    # print(pixel_sample_2_binary(img))
