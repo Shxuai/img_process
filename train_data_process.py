@@ -180,8 +180,6 @@ if __name__ == '__main__':
                 pixel = np.array(img[y][x]).astype(np.uint8)
                 chunk.tofile(img_path_list[t] + ".dir/[" + str(y) + "," + str(x) + "].chunk")
                 pixel.tofile(img_path_list[t] + ".dir/[" + str(y) + "," + str(x) + "].pixel")
-                cv2.imshow('src', chunk_2_img(chunk))
-                cv2.waitKey()
 
     test_img = chunk_2_img(pixel_sample_chunk(img_bin, CHUNK_SIZE, [0, 0]))
 
