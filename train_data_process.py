@@ -1,6 +1,7 @@
 # --coding:utf-8--
 import os
 import string
+from random import random
 
 import cv2
 import numpy as np
@@ -8,11 +9,15 @@ import time
 import threading
 import sys
 import torch
+from tqdm import trange
+
+import ProcessBar
 
 NUM_DIGITS = 8
 PIXEL_SAMPLE_SIZE = 3  # Square calculation , must be odd number.
 FUZZY_RATE = 4
 CHUNK_SIZE = 500
+TRAIN_RATE = 0.01
 
 
 def binary_encode(i, num_digits):
@@ -31,8 +36,10 @@ def rgb_2_binary(cv2_img_object):
     print('rgb_2_binary encoding start')
     result = np.zeros((cv2_img_object.shape[0], cv2_img_object.shape[1], cv2_img_object.shape[2], NUM_DIGITS),
                       dtype=np.uint8)
-    for y in range(0, cv2_img_object.shape[0]):
-        print("rgb_2_binary encoding complete: " + str(round(y / cv2_img_object.shape[0] * 100, 2)) + "%")
+
+    # process_bar = ProcessBar.ShowProcess(cv2_img_object.shape[0], 'rgb_2_binary encoding completed, use time:' + str(start_time - time.time()) + 's')
+    for y in trange(0, cv2_img_object.shape[0]):
+        # print("rgb_2_binary encoding complete: " + str(round(y / cv2_img_object.shape[0] * 100, 2)) + "%")
         for x in range(0, cv2_img_object.shape[1]):
             for z in range(0, cv2_img_object.shape[2]):
                 result[y][x][z] = binary_encode(cv2_img_object[y][x][z], NUM_DIGITS)
@@ -46,7 +53,7 @@ def rgb_2_binary(cv2_img_object):
     #     x[...] = binary_encode(x, NUM_DIGITS)
     # return cv2_img_object
 
-    print('rgb_2_binary encoding completed, use time:', start_time - time.time(), 's')
+    # print('rgb_2_binary encoding completed, use time:', start_time - time.time(), 's')
     return result
 
 
@@ -174,13 +181,17 @@ if __name__ == '__main__':
             os.mkdir(img_path_list[t] + ".dir/")
         img = cv2.imread(img_path_list[t])
         img_bin = pixel_sample_2_binary(fuzzy_process(img, FUZZY_RATE))
+
         for y in range(img_bin.shape[0]):
-            print("pixel_sample_chunk complete:" + str(round(y / img_bin.shape[0] * 100, 2)) + "%")
+            # print("pixel_sample_chunk complete:" + str(round(y / img_bin.shape[0] * 100, 2)) + "%")
             for x in range(img_bin.shape[1]):
+                if random() >= TRAIN_RATE:
+                    break
                 chunk = pixel_sample_chunk(img_bin, CHUNK_SIZE, [y, x])
                 pixel = np.array(img[y][x]).astype(np.uint8)
                 chunk.tofile(img_path_list[t] + ".dir/[" + str(y) + "," + str(x) + "].chunk")
                 pixel.tofile(img_path_list[t] + ".dir/[" + str(y) + "," + str(x) + "].pixel")
+
 
     # test_img = chunk_2_img(pixel_sample_chunk(img_bin, CHUNK_SIZE, [0, 0]))
     #
