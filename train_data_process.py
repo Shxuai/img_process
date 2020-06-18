@@ -33,7 +33,7 @@ def binary_decode(bin_input):
 
 def rgb_2_binary(cv2_img_object):
     start_time = time.time()
-    print('rgb_2_binary encoding start')
+    # print('rgb_2_binary encoding start')
     result = np.zeros((cv2_img_object.shape[0], cv2_img_object.shape[1], cv2_img_object.shape[2], NUM_DIGITS),
                       dtype=np.uint8)
 
@@ -189,8 +189,11 @@ if __name__ == '__main__':
                     break
                 chunk = pixel_sample_chunk(img_bin, CHUNK_SIZE, [y, x])
                 pixel = np.array(img[y][x]).astype(np.uint8)
+
                 chunk.tofile(img_path_list[t] + ".dir/[" + str(y) + "," + str(x) + "].chunk")
                 pixel.tofile(img_path_list[t] + ".dir/[" + str(y) + "," + str(x) + "].pixel")
+
+
 
 
     # test_img = chunk_2_img(pixel_sample_chunk(img_bin, CHUNK_SIZE, [0, 0]))
