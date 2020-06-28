@@ -59,7 +59,7 @@ for epoch in range(10000):
         batchY = trY[start:end]
 
         y_pred = model(batchX)
-        loss = loss_fn(y_pred, batchY)
+        loss = loss_fn(y_pred.flatten(), batchY.flatten())
 
         optimizer.zero_grad()
         loss.backward()

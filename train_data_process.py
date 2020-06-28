@@ -16,7 +16,7 @@ import ProcessBar
 NUM_DIGITS = 8
 PIXEL_SAMPLE_SIZE = 3  # Square calculation , must be odd number.
 FUZZY_RATE = 4
-CHUNK_SIZE = 500
+CHUNK_SIZE = 100
 TRAIN_RATE = 0.01
 
 
