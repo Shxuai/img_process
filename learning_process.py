@@ -11,7 +11,7 @@ CHUNK_SIZE = train_data_process.CHUNK_SIZE
 
 img_data = [[], []]
 
-for root, dirs, files in os.walk("resource\img_data", topdown=False):
+for root, dirs, files in os.walk('resource\img_data', topdown=False):
     for name in files:
         if os.path.join(root, name).endswith('.chunk'):
             img_data[0].append(os.path.join(root, name))
@@ -35,7 +35,6 @@ for i in range(len(img_data[0])):
 trX = torch.Tensor(chunk)
 trY = torch.Tensor(pixel)
 del chunk, pixel
-print(trX.shape)
 
 # Define the model
 NUM_HIDDEN = 100
@@ -59,6 +58,11 @@ for epoch in range(10000):
         batchY = trY[start:end]
 
         y_pred = model(batchX)
+<<<<<<< HEAD
+=======
+        # print(y_pred.flatten().shape, batchY.flatten().shape)
+        # exit()
+>>>>>>> 5a84cc90ac27ae6f3e00d25d9c5b13e933080dad
         loss = loss_fn(y_pred.flatten(), batchY.flatten())
 
         optimizer.zero_grad()
