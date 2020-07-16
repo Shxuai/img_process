@@ -59,6 +59,9 @@ for epoch in range(10000):
 
         y_pred = model(batchX)
 
+        print(y_pred.flatten().shape, batchY.flatten().shape)
+        exit()
+
         loss = loss_fn(y_pred.flatten(), batchY.flatten())
 
         optimizer.zero_grad()
